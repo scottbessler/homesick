@@ -4,7 +4,7 @@ class Homesick
     def git_clone(repo, config = {})
       config ||= {}
       destination = config[:destination] || begin
-        repo =~ /([^\/]+)\.git$/
+        repo =~ /([^\/]+)(?:\.git)?$/
        $1
       end
 
@@ -87,7 +87,7 @@ class Homesick
           say_status :conflict, "#{destination} exists and points to #{destination.readlink}", :red unless options[:quiet]
 
           if options[:force] || shell.file_collision(destination) { source }
-            system "ln -sf #{source} #{destination}" unless options[:pretend]
+            system "ln -nsf #{source} #{destination}" unless options[:pretend]
           end
         end
       elsif destination.exist?
